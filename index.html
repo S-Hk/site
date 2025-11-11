@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-Hk | Solar Eclipse Protocol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        body {
+            background: #000000;
+            color: #E5E7EB;
+            overflow-x: hidden;
+        }
+        
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px #FFB82B, 0 0 20px #FFB82B, 0 0 30px #E87A00;
+            background: linear-gradient(135deg, #FFB82B 0%, #E87A00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .panel {
+            background: #1A1E2A;
+            border: 1px solid #1A1E2A;
+            transition: all 0.3s ease;
+        }
+        
+        .panel:hover {
+            border-color: #FFB82B;
+            box-shadow: 0 0 20px rgba(255, 184, 43, 0.3);
+        }
+        
+        .btn-primary {
+            border: 1px solid #FFB82B;
+            background: transparent;
+            color: #FFB82B;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary:hover {
+            background: #FFB82B;
+            color: #000000;
+            box-shadow: 0 0 30px rgba(255, 184, 43, 0.6);
+        }
+        
+        .breathing-glow {
+            animation: breathe 3s ease-in-out infinite;
+        }
+        
+        @keyframes breathe {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(255, 184, 43, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(255, 184, 43, 0.6);
+            }
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #FFB82B;
+        }
+        
+        .timeline-node {
+            width: 12px;
+            height: 12px;
+            background: #FFB82B;
+            border-radius: 50%;
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            box-shadow: 0 0 10px #FFB82B;
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            background-color: #FFB82B;
+            animation: blink 0.7s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+        
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+            filter: drop-shadow(0 0 8px #FFB82B);
+        }
+        
+        nav a {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #FFB82B;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        .stat-bar {
+            height: 4px;
+            background: #1A1E2A;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFB82B 0%, #E87A00 100%);
+            animation: fillBar 2s ease-out;
+        }
+        
+        @keyframes fillBar {
+            from { width: 0; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas-bg"></canvas>
+    
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-90 border-b border-gray-800">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="text-2xl glow-text font-bold">&gt; S-Hk_</div>
+                <div class="flex gap-8">
+                    <a href="#home" class="text-gray-400 hover:text-yellow-500">Home</a>
+                    <a href="#projects" class="text-gray-400 hover:text-yellow-500">Projects</a>
+                    <a href="#experience" class="text-gray-400 hover:text-yellow-500">Experience</a>
+                    <a href="#contact" class="text-gray-400 hover:text-yellow-500">Contact</a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="min-h-screen flex items-center justify-center px-6 pt-20">
+            <div class="text-center max-w-4xl">
+                <div class="mb-8">
+                    <span class="text-gray-500 text-sm">[INITIALIZING...]</span>
+                </div>
+                <h1 class="text-6xl md:text-8xl glow-text font-bold mb-6 breathing-glow">S-Hk</h1>
+                <div class="text-2xl md:text-4xl mb-4 h-12">
+                    <span class="typewriter" id="typewriter"></span><span class="cursor">|</span>
+                </div>
+                <p class="text-xl text-gray-400 mb-12">Building robust backends in a chaotic world.</p>
+                <a href="#projects" class="btn-primary px-8 py-3 inline-block text-lg">Initialize Protocol</a>
+            </div>
+        </section>
+
+        <!-- Profile Data Panel -->
+        <section class="container mx-auto px-6 py-20">
+            <div class="panel max-w-4xl mx-auto p-8">
+                <div class="border-b border-gray-700 pb-4 mb-6">
+                    <h2 class="text-3xl glow-text">// USER_PROFILE</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="mb-4">
+                            <span class="text-gray-500">DESIGNATION:</span>
+                            <p class="text-xl">S-Hk</p>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-gray-500">XP_LEVEL:</span>
+                            <p class="text-xl">5 Years Corporate Experience</p>
+                            <div class="stat-bar mt-2">
+                                <div class="stat-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-gray-500">SPECIALIZATION:</span>
+                            <p class="text-xl">Backend Architecture</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mb-4">
+                            <span class="text-gray-500">TECH_STACK:</span>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="px-3 py-1 text-sm border border-yellow-500 text-yellow-500">Java</span>
+                                <span class="px-3 py-1 text-sm border border-yellow-500 text-yellow-500">Spring Boot</span>
+                                <span class="px-3 py-1 text-sm border border-yellow-500 text-yellow-500">Microservices</span>
+                                <span class="px-3 py-1 text-sm border border-yellow-500 text-yellow-500">API Design</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-gray-500">NETWORK_LINKS:</span>
+                            <div class="flex gap-4 mt-3">
+                                <a href="https://twitter.com/Hk_dev_" target="_blank" class="social-icon">
+                                    <svg class="w-8 h-8" fill="#FFB82B" viewBox="0 0 24 24">
+                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/S-Hk" target="_blank" class="social-icon">
+                                    <svg class="w-8 h-8" fill="#FFB82B" viewBox="0 0 24 24">
+                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="container mx-auto px-6 py-20">
+            <h2 class="text-4xl glow-text mb-12 text-center">// PROJECTS_LOG</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div class="panel p-6">
+                    <div class="text-yellow-500 text-sm mb-2">[PROJECT_001]</div>
+                    <h3 class="text-xl mb-3">E-Commerce Microservices</h3>
+                    <p class="text-gray-400 text-sm mb-4">Scalable microservices architecture for high-traffic e-commerce platform with distributed transactions.</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">Spring Boot</span>
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">Kafka</span>
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">Redis</span>
+                    </div>
+                </div>
+                <div class="panel p-6">
+                    <div class="text-yellow-500 text-sm mb-2">[PROJECT_002]</div>
+                    <h3 class="text-xl mb-3">Real-Time Analytics API</h3>
+                    <p class="text-gray-400 text-sm mb-4">High-performance REST API processing 10M+ events daily with sub-100ms response times.</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">Java 17</span>
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">PostgreSQL</span>
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">Docker</span>
+                    </div>
+                </div>
+                <div class="panel p-6">
+                    <div class="text-yellow-500 text-sm mb-2">[PROJECT_003]</div>
+                    <h3 class="text-xl mb-3">Banking Integration Layer</h3>
+                    <p class="text-gray-400 text-sm mb-4">Secure API gateway integrating multiple banking systems with PCI DSS compliance.</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">Spring Cloud</span>
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">OAuth2</span>
+                        <span class="text-xs px-2 py-1 border border-orange-500 text-orange-500">MongoDB</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Timeline -->
+        <section id="experience" class="container mx-auto px-6 py-20">
+            <h2 class="text-4xl glow-text mb-12 text-center">// COMMIT_HISTORY</h2>
+            <div class="max-w-3xl mx-auto">
+                <div class="relative pl-12">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="mb-12 relative">
+                        <div class="timeline-node"></div>
+                        <div class="panel p-6">
+                            <div class="text-yellow-500 text-sm mb-1">2020 - 2022</div>
+                            <h3 class="text-xl mb-2">Junior Backend Developer</h3>
+                            <p class="text-gray-400 text-sm mb-2">TechCorp Solutions</p>
+                            <p class="text-gray-500 text-sm">Developed RESTful APIs and microservices. Reduced API response time by 40% through optimization.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-12 relative">
+                        <div class="timeline-node"></div>
+                        <div class="panel p-6">
+                            <div class="text-yellow-500 text-sm mb-1">2022 - 2024</div>
+                            <h3 class="text-xl mb-2">Backend Developer</h3>
+                            <p class="text-gray-400 text-sm mb-2">CloudScale Inc</p>
+                            <p class="text-gray-500 text-sm">Led migration to microservices architecture. Implemented event-driven systems handling 5M+ daily transactions.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-12 relative">
+                        <div class="timeline-node"></div>
+                        <div class="panel p-6">
+                            <div class="text-yellow-500 text-sm mb-1">2024 - Present</div>
+                            <h3 class="text-xl mb-2">Senior Backend Engineer</h3>
+                            <p class="text-gray-400 text-sm mb-2">DataFlow Systems</p>
+                            <p class="text-gray-500 text-sm">Architecting enterprise-grade distributed systems. Mentoring junior developers and establishing best practices.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="container mx-auto px-6 py-20">
+            <div class="panel max-w-2xl mx-auto p-8 text-center">
+                <h2 class="text-3xl glow-text mb-6">// ESTABLISH_CONNECTION</h2>
+                <p class="text-gray-400 mb-8">Ready to build something incredible together?</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="mailto:contact@s-hk.dev" class="btn-primary px-6 py-3">Contact Me</a>
+                    <a href="mailto:freelance@s-hk.dev" class="btn-primary px-6 py-3">Hire for Freelance</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="border-t border-gray-800 py-8">
+            <div class="container mx-auto px-6 text-center">
+                <p class="text-gray-500 text-sm mb-2">© 2025 S-Hk. All systems operational.</p>
+                <p class="text-yellow-500 text-xs">System Status: <span class="breathing-glow inline-block">●</span> Online</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Canvas Background Animation
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        const particles = [];
+        const particleCount = 80;
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedY = Math.random() * 0.5 + 0.2;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+            
+            update() {
+                this.y += this.speedY;
+                if (this.y > canvas.height) {
+                    this.y = 0;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            
+            draw() {
+                ctx.fillStyle = `rgba(232, 122, 0, ${this.opacity})`;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
+        }
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // Typewriter Effect
+        const roles = ['Java Developer', 'Spring Boot Specialist', 'Backend Architect'];
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterElement = document.getElementById('typewriter');
+        
+        function typeWriter() {
+            const currentRole = roles[roleIndex];
+            
+            if (!isDeleting) {
+                typewriterElement.textContent = currentRole.substring(0, charIndex);
+                charIndex++;
+                
+                if (charIndex > currentRole.length) {
+                    isDeleting = true;
+                    setTimeout(typeWriter, 2000);
+                    return;
+                }
+            } else {
+                typewriterElement.textContent = currentRole.substring(0, charIndex);
+                charIndex--;
+                
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    roleIndex = (roleIndex + 1) % roles.length;
+                }
+            }
+            
+            setTimeout(typeWriter, isDeleting ? 50 : 100);
+        }
+        
+        typeWriter();
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
